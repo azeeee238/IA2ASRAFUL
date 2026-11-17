@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Léa - Ton IA d'Histoire</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .chat-container {
+            width: 400px;
+            height: 600px;
+            background: #1e293b;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+        .chat-header {
+            background: #0ea5e9;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.3); }
+        .chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .message.bot { background: #334155; color: #f8fafc; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .message.user { background: #0ea5e9; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-input-area {
+            display: flex;
+            padding: 12px;
+            background: #0f172a;
+            border-top: 1px solid #334155;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 14px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        .chat-input-area button {
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 0 16px;
+            margin-left: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <span>🌍 Léa - Histoire / Géo</span>
+            <a href="index.html" class="back-btn">Menu 🏠</a>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">Hello ! C'est Léa version Histoire-Géo. Balance une date, une période ou un événement !</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="Pose ta question d'histoire..." autofocus>
+            <button onclick="envoyerMessage()">Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        const inputField = document.getElementById("userInput");
+        const messagesContainer = document.getElementById("chatMessages");
+        inputField.addEventListener("keypress", (e) => { if (e.key === "Enter") envoyerMessage(); });
+
+        function ajouterMessage(texte, expediteur) {
+            const div = document.createElement("div");
+            div.classList.add("message", expediteur);
+            div.textContent = texte;
+            messagesContainer.appendChild(div);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function repondre(texte) {
+            const t = texte.toLowerCase();
+            if (t.includes("prehistoire")) return "De l'apparition de l'humanité jusqu'à l'écriture (-3000 avant J.-C.).";
+            if (t.includes("antiquite")) return "De -3000 (écriture) jusqu'à la chute de Rome en 476.";
+            if (t.includes("moyen age")) return "De 476 à 1492 (découverte de l'Amérique). Châteaux forts et chevaliers !";
+            if (t.includes("revolution") || t.includes("1789")) return "1789 : Début de la Révolution française, prise de la Bastille !";
+            return "Demande-moi une grande période (Antiquité, Moyen Âge...) ou une date clé !";
+        }
+
+        function envoyerMessage() {
+            const texte = inputField.value.trim();
+            if (!texte) return;
+            ajouterMessage(texte, "user");
+            inputField.value = "";
+            setTimeout(() => ajouterMessage(repondre(texte), "bot"), 400);
+        }
+    </script>
+</body>
+</html>
